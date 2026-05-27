@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
  * Extends JpaRepository to inherit standard CRUD operations automatically
  */
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer> {
-
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }

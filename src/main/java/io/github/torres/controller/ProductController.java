@@ -35,14 +35,14 @@ public class ProductController {
 
     // 3. DELETE: Remove a product by ID
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Integer id) {
+    public void deleteProduct(@PathVariable Long id) {
         // @PathVariable extracts the ID from the URL (e.g., /api/products/5)
         productRepository.deleteById(id);
     }
 
     // 4. PUT: Update an existing product
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
 
         if (product != null && id > 0) {
             // Ratrieve the original product from the database (throws an exception if not
