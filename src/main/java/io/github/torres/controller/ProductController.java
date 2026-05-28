@@ -7,8 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 /**
  * REST Controller for managing products.
@@ -26,8 +27,9 @@ public class ProductController {
 
     // 1. GET: Retrieve all products
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        List<ProductResponseDTO> products = productService.getAllProducts();
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(
+            @PageableDefault(size=10, page=0) Pageable pageable) {
+        Page<ProductResponseDTO> products = productService.getAllProducts(pageable);
         return ResponseEntity.ok(products); // return 200 ok
     }
 

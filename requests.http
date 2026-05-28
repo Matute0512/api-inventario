@@ -7,6 +7,9 @@ GET http://localhost:8080/api/products/1
 ### Obtener producto no existente
 GET http://localhost:8080/api/products/999
 
+### Obtener productos con paginación personalizada (ej. página 0, 5 por página)
+GET http://localhost:8080/api/products?page=0&size=5
+
 ### Crear producto
 POST http://localhost:8080/api/products
 Content-Type: application/json

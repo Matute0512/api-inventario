@@ -2,10 +2,11 @@ package io.github.torres.service;
 
 import io.github.torres.dto.ProductRequestDTO;
 import io.github.torres.dto.ProductResponseDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
-    List<ProductResponseDTO> getAllProducts();
+    Page<ProductResponseDTO> getAllProducts(Pageable pageable);
     ProductResponseDTO createProduct(ProductRequestDTO requestDTO);
     ProductResponseDTO updateProduct(Long id,ProductRequestDTO requestDTO);
     ProductResponseDTO getProductById(Long id);

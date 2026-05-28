@@ -8,9 +8,10 @@ import io.github.torres.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -24,10 +25,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> getAllProducts(){
+    public Page<ProductResponseDTO> getAllProducts(Pageable pageable) {
         logger.info("Buscando el listado completo de productos en la base de datos...");
-        // We obtain the entities, map them to DTOs using Streams, and return them
-        return productRepository.findAll().stream().map(this::mapToResponseDTO).collect(Collectors.toList());
+        // The repository already knows how to handle Pageable
+        return productRepository.findAll(pageable)
+                .map(this::mapToResponseDTO); // We use the native .map() function of the Page interface
     }
 
     @Override
