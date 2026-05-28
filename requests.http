@@ -1,0 +1,16 @@
+### Obtener productos
+GET http://localhost:8080/api/products
+
+### Obtener producto por ID
+GET http://localhost:8080/api/products/1
+
+### Crear producto
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Mouse Gamer",
+  "description": "RGB",
+  "price": -1,
+  "stock": 10
+}

@@ -1,67 +1,64 @@
 package io.github.torres.controller;
 
-import io.github.torres.model.Product;
-import io.github.torres.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.github.torres.dto.ProductRequestDTO;
+import io.github.torres.dto.ProductResponseDTO;
+import io.github.torres.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * REST Controller for managing products.
- * Acts as the entry point for HTTP requests.
+ * Acts as the entry point for HTTP requests, delegating business logic to the Service Layer.
  */
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    // Dependency Injection: Spring automatically provides the repository instance
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     // 1. GET: Retrieve all products
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductResponseDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products); // return 200 ok
     }
 
     // 2. POST: Create a new product
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
         // @RequestBody tells Spring to convert the incoming JSON into a Product
         // objectapiInventarioApplication
-        return productRepository.save(product);
+        ProductResponseDTO createdProduct = productService.createProduct(requestDTO);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);  // Return 201 Created
     }
 
-    // 3. DELETE: Remove a product by ID
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        // @PathVariable extracts the ID from the URL (e.g., /api/products/5)
-        productRepository.deleteById(id);
-    }
-
-    // 4. PUT: Update an existing product
+    // 3. PUT: Update an existing product
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductRequestDTO requestDTO) {
+        ProductResponseDTO updatedProduct = productService.updateProduct(id, requestDTO);
+        return ResponseEntity.ok(updatedProduct); // Return 200 OK
+    }
 
-        if (product != null && id > 0) {
-            // Ratrieve the original product from the database (throws an exception if not
-            // found)
-            Product existingProduct = productRepository.findById(id).orElseThrow();
+    // 4. DELETE: Remove a product by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build(); // Return 204 No Content
+    }
 
-            // Overwrite the old data with the new data received via JSON
-            existingProduct.setName(product.getName());
-            existingProduct.setDescription(product.getDescription());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setStock(product.getStock());
-
-            // Save the update product (Spring performs an UPDATE because the ID already
-            // exists)
-            return productRepository.save(existingProduct);
-
-        }
-
-        // If validation fails, throws an exception
-        throw new IllegalArgumentException("Datos o ID de producto no v");
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
+        ProductResponseDTO productResponseDTO = productService.getProductById(id);
+        return ResponseEntity.ok(productResponseDTO);
     }
 }

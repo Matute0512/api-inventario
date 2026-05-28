@@ -61,6 +61,12 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
+    @Override
+    public ProductResponseDTO getProductById(Long id){
+        Product product = productRepository.findById(id).orElseThrow();
+        return mapToResponseDTO(product);
+    }
+
     // Private helper method (DRY - Don't Repeat Yourself) to map Entity to Response DTO
     private ProductResponseDTO mapToResponseDTO(Product product){
         return  new ProductResponseDTO(
