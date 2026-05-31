@@ -3,6 +3,7 @@ package io.github.torres.service;
 import io.github.torres.dto.ProductRequestDTO;
 import io.github.torres.dto.ProductResponseDTO;
 import io.github.torres.exception.ProductNotFoundException;
+import io.github.torres.mapper.ProductMapper;
 import io.github.torres.model.Product;
 import io.github.torres.repository.ProductRepository;
 import org.slf4j.Logger;
@@ -37,18 +38,11 @@ public class ProductServiceImpl implements ProductService {
         logger.info("Iniciando la creacion del producto: {}",requestDTO.name());
 
         // Manual mapping of DTO to Entity
-        Product product = new Product();
-        product.setName(requestDTO.name());
-        product.setDescription(requestDTO.description());
-        product.setPrice(requestDTO.price());
-        product.setStock(requestDTO.stock());
-
-        // Save to the database
-        Product savedProduct = productRepository.save(product);
+        Product savedProduct = productRepository.save(ProductMapper.toEntity(requestDTO));
         logger.info("Producto creado con ID asignado: {}", savedProduct.getId());
 
         // Return the DTO
-        return mapToResponseDTO(savedProduct);
+        return ProductMapper.toResponseDTO(savedProduct);
     }
 
     @Override
@@ -101,7 +95,9 @@ public class ProductServiceImpl implements ProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getStock()
+                product.getStock(),
+                product.getCreatedAt(),
+                product.getUpdatedAt()
         );
     }
 }

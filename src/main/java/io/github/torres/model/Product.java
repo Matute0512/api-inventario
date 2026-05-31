@@ -1,22 +1,28 @@
 package io.github.torres.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 /**
  * Represents a product entity in the inventory system.
  * Mapped to the 'products' table in the database
  */
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name="products")
 public class Product {
 
-    // 1. Mark this field as the Primary Key and set it to Auto-Incerement
+    // 1. Mark this field as the Primary Key and set it to Auto-Increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",updatable=false,nullable=false)
     private Long id;
 
-    // 2. Define the name colum (cannot be null)
+    // 2. Define the name column (cannot be null)
     @Column(name="name",nullable = false, length = 100)
     private String name;
     
@@ -32,7 +38,16 @@ public class Product {
     @Column (name= "stock",nullable = false)
     private Integer stock;
 
-    // 6. Generete empty constructor (Required by Spring/JPA/Hibernate)
+    // --- Audit fields ---
+    @CreatedDate
+    @Column(name="created_at",nullable = false,updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name="updated_at",nullable = false)
+    private LocalDateTime updatedAt;
+
+    // 6. Generate empty constructor (Required by Spring/JPA/Hibernate)
     public Product(){
     }
 
@@ -71,6 +86,13 @@ public class Product {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     @Override
