@@ -1,6 +1,7 @@
 package io.github.torres.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name="products")
+@Table(name="products",indexes = {@Index(name="idx_product_name",columnList = "name")})
 public class Product {
 
     // 1. Mark this field as the Primary Key and set it to Auto-Increment
