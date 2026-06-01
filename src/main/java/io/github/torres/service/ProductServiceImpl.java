@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
         logger.info("Buscando el listado completo de productos en la base de datos...");
         // The repository already knows how to handle Pageable
         return productRepository.findAll(pageable)
-                .map(this::mapToResponseDTO); // We use the native .map() function of the Page interface
+                .map(ProductMapper::toResponseDTO); // Static method reference for mapping entities to DTOs
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
         // Save and return the DTO
         Product updatedProduct = productRepository.save(existingProduct);
         logger.info("Producto con ID: {} actualizado correctamente.",updatedProduct.getId());
-        return  mapToResponseDTO(updatedProduct);
+        return  ProductMapper.toResponseDTO(updatedProduct);
     }
 
     @Override
@@ -85,19 +85,7 @@ public class ProductServiceImpl implements ProductService {
             logger.error("Error: No se encontró el producto con ID: {}",id);
             return new ProductNotFoundException("El producto con el ID: "+id+" no existe.");
         });
-        return mapToResponseDTO(product);
+        return ProductMapper.toResponseDTO(product);
     }
 
-    // Private helper method (DRY - Don't Repeat Yourself) to map Entity to Response DTO
-    private ProductResponseDTO mapToResponseDTO(Product product){
-        return  new ProductResponseDTO(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStock(),
-                product.getCreatedAt(),
-                product.getUpdatedAt()
-        );
-    }
 }

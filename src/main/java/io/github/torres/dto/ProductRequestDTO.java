@@ -8,13 +8,17 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO for creating and updating a product.
+ * Used as the request body for POST /api/products and PUT /api/products/{id}.
+ */
 public record ProductRequestDTO(
 
     @NotBlank(message = "El nombre del producto es obligatorio")
     @Size(max = 100, message = "El nombre no puede exeder los 100 caracteres")
     String name,
 
-    @Size(max = 225, message = "La descripción no puede exceder los 255 caracteres")
+    @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
     String description,
 
     @NotNull(message = "El precio es obligatorio")
