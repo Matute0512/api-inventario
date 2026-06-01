@@ -36,7 +36,7 @@ public class Product {
 
     // 5. Define the stock column 
     @Column (name= "stock",nullable = false)
-    private Integer stock;
+    private int stock;
 
     // --- Audit fields ---
     @CreatedDate
@@ -80,11 +80,11 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 
-    public void setStock(Integer stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
 
